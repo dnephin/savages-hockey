@@ -1,12 +1,28 @@
-<html>
-<head>
-</head>
-<body>
+{% extends 'base.html' %}
 
+{% block content %}
+	<h3>Set your status</h3>
+	<form action="{% url hockey_register.register.views.update_status game.id %}" method="POST">
+	{{ attendance_form.as_table }}
+	<input type="submit" />
+	</form>
+
+	<h3> Players registered for the game:</h3>
+	<table>
 	{% for attend in attendances %}
-		{% attend.player %}
-		{% attend.state %}
+	<tr>
+		<td>{{ attend.player }}</td>
+		<td>{{ attend.state }}</td>
+	</tr>
+	{% endfor %}
+	</table>
+
+	<h4>Summary</h4>
+
+	<h3>Players that have not set a status yet for this game:</h3>
+	{% for player in players %}
+		{{ player.first_name }} {{ player.last_name }} ({{ player.username }})
+		{% if not forloop.last %}, {% endif %}
 	{% endfor %}
 
-</body>
-</html>
+{% endblock %}

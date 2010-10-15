@@ -1,0 +1,24 @@
+<html>
+<head>
+	<title>Savages Ball Hockey - Player Availability Tracker</title>
+</head>
+
+<body>
+<div class="container">
+	<div class="span-24 last">
+		<h1>Savages Ball Hockey - Player Availability Tracker</h1>
+	</div>
+
+	{% block login_bar %}
+	<div class="prepend-20 span-4 last small append-bottom">
+		Logged in as: <strong>{{ user.username }}</strong> | 
+		<a href="{% url django.contrib.auth.views.logout %}">logout</a>
+	</div>
+	{% endblock %}
+
+	{% block content %}
+
+
+	{% endblock %}
+</body>
+</html>
