@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+	{% block login_bar %}
+	<div class="prepend-20 span-4 last small append-bottom">
+		<a href="{% url django.contrib.auth.views.login %}">Login</a>
+	</div>
+	{% endblock %}
+
+
+{% block content %}
+
+{% if form.errors %}
+	{{ form.errors }}
+{% endif %}
+
+<form method="post" action="{% url hockey_register.register. %}">
+{{ form.as_url }}
+<input type="submit" value="login" />
+<input type="hidden" name="next" value="{{ next }}" />
+</form>
+
+{% endblock %}
+

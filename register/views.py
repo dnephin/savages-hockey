@@ -9,6 +9,7 @@ from django.template import RequestContext
 
 from datetime import date, timedelta
 import calendar
+from collections import defaultdict
 
 
 def index(request):
@@ -39,10 +40,9 @@ def update_status(request, game_id, attendance_id=None):
 	# Try loading an existing status
 	try:
 		old_attendance = Attendance.objects.get(player=request.user, game__id=game_id)
+		old_attendance.delete()
 	except ObjectDoesNotExist, e:
 		pass
-	else:
-		old_attendance.delete()
 
 	# TODO: error handling
 	attendance.save()
@@ -53,6 +53,8 @@ def update_status(request, game_id, attendance_id=None):
 
 def status(request, game_day=None):
 	" Display the attendance status for a game. "
+
+	# Calculate date of next Friday if not date is set
 	if game_day is None:
 		today = date.today()
 		days_to_friday = 4 - calendar.weekday(today.year, today.month, today.day)
@@ -60,9 +62,7 @@ def status(request, game_day=None):
 			days_to_friday = abs(days_to_friday) + 4
 		game_day = (today + timedelta(days=days_to_friday)).strftime('%Y-%m-%d')
 
-
-	# TODO: calculate summaries
-
+	# Retrieve data
 	try:
 		attendance = Attendance.objects.filter(game__game_day=game_day).order_by('player__username')
 		players = User.objects.all().order_by('username')
@@ -70,12 +70,25 @@ def status(request, game_day=None):
 	except ObjectDoesNotExist, e:
 		return render_to_response('gamenotfound.html', {'game_date': game_day})
 
+	# Calculate summary
+	summary = defaultdict(int)
+	for attend in attendance:
+		summary[attend.state] += 1
+		# remove players who have responded for this game
+		if attend.state != 'unknown':
+			# TODO: remove from query set ?
+			pass
+	
+
 	attend_form = AttendanceForm()
 	# TODO: set state in attendance form
 
 	return render_to_response('status.html', RequestContext(request, 
 			 {'attendances': attendance, 'players': players, 
-			'game': game, 'attendance_form': attend_form}))
+			'game': game, 'attendance_form': attend_form,
+			'summary': summary.items()}))
 
 def add_player(request):
 	" Register a new player. "
+
+

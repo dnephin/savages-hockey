@@ -9,15 +9,33 @@
 
 	<h3> Players registered for the game:</h3>
 	<table>
-	{% for attend in attendances %}
-	<tr>
-		<td>{{ attend.player }}</td>
-		<td>{{ attend.state }}</td>
-	</tr>
-	{% endfor %}
+		<thead>
+		<tr>
+			<th>Player</th>
+			<th>Status</th>
+		</tr>
+		</thead>
+		<tbody>
+		{% for attend in attendances %}
+		<tr>
+			<td>{{ attend.player.first_name }} {{ attend.player.last_name }} ({{ attend.player.email }})</td>
+			<td>{{ attend.state }}</td>
+		</tr>
+		{% endfor %}
+		</tbody>
 	</table>
 
 	<h4>Summary</h4>
+	<table>
+	<tbody>
+	{% for state, count in summary %}
+		<tr>
+			<td>{{ state }}</td>
+			<td>{{ count }}</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+	</table>
 
 	<h3>Players that have not set a status yet for this game:</h3>
 	{% for player in players %}
