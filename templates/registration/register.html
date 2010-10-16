@@ -10,13 +10,19 @@
 {% block content %}
 
 {% if form.errors %}
+	<div class="error span-12 append-12 last">
 	{{ form.errors }}
+	</div>
 {% endif %}
 
-<form method="post" action="{% url hockey_register.register. %}">
-{{ form.as_url }}
-<input type="submit" value="login" />
-<input type="hidden" name="next" value="{{ next }}" />
+<form method="post" action="{% url hockey_register.register.views.add_player %}">
+	<fieldset>
+		<legend>Register</legend>
+		<table>
+		{{ form.as_table }}
+		</table>
+		<input type="submit" value="register" />
+	</fieldset>
 </form>
 
 {% endblock %}

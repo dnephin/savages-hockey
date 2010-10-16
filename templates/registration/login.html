@@ -10,7 +10,9 @@
 {% block content %}
 
 {% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
+	<div class="error span-12 last">
+	Your username and password didn't match. Please try again.
+	</div>
 {% endif %}
 
 <form method="post" action="{% url django.contrib.auth.views.login %}">

@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import *
+from django.conf import settings
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -16,6 +17,8 @@ urlpatterns = patterns('',
 	(r'^update_status/(?P<game_id>\d+)/$', 'hockey_register.register.views.update_status'),
 	(r'^status/(?P<game_day>\d{4}-\d{2}-\d{2})$', 'hockey_register.register.views.status'),
 	(r'^status/$', 'hockey_register.register.views.status'),
+	(r'^m/(?P<path>.*)$', 'django.views.static.serve',
+	        {'document_root': settings.MEDIA_ROOT}),
 
 
 	

@@ -1,6 +1,9 @@
 <html>
 <head>
 	<title>Savages Ball Hockey - Player Availability Tracker</title>
+	<link rel="stylesheet" href="/m/css/screen.css" type="text/css" media="screen, projection"> 
+	<link rel="stylesheet" href="/m/css/print.css" type="text/css" media="print"> 
+	<!--[if lt IE 8]><link rel="stylesheet" href="/m/css/ie.css" type="text/css" media="screen, projection"><![endif]-->
 </head>
 
 <body>
@@ -10,7 +13,7 @@
 	</div>
 
 	{% block login_bar %}
-	<div class="prepend-20 span-4 last small append-bottom">
+	<div class="prepend-18 span-6 last small append-bottom">
 		Logged in as: <strong>{{ user.username }}</strong> | 
 		<a href="{% url django.contrib.auth.views.logout %}">logout</a>
 	</div>

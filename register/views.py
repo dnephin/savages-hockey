@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from hockey_register.register.models import *
-from hockey_register.register.forms import AttendanceForm
+from hockey_register.register.forms import AttendanceForm, RegisterForm
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 
@@ -59,7 +59,7 @@ def status(request, game_day=None):
 		today = date.today()
 		days_to_friday = 4 - calendar.weekday(today.year, today.month, today.day)
 		if days_to_friday < 0:
-			days_to_friday = abs(days_to_friday) + 4
+			days_to_friday = 7 + days_to_friday
 		game_day = (today + timedelta(days=days_to_friday)).strftime('%Y-%m-%d')
 
 	# Retrieve data
@@ -70,25 +70,39 @@ def status(request, game_day=None):
 	except ObjectDoesNotExist, e:
 		return render_to_response('gamenotfound.html', {'game_date': game_day})
 
+	# Build player hash
+	player_map = dict(map(lambda p: (p.id, p), players))
+
 	# Calculate summary
 	summary = defaultdict(int)
+	user_state = 'unknown'
 	for attend in attendance:
 		summary[attend.state] += 1
 		# remove players who have responded for this game
 		if attend.state != 'unknown':
-			# TODO: remove from query set ?
-			pass
-	
+			del player_map[attend.player.id]
 
-	attend_form = AttendanceForm()
-	# TODO: set state in attendance form
+		if attend.player.id == request.user.id:
+			user_state = attend.state
+	
+	attend_form = AttendanceForm({'state': user_state})
 
 	return render_to_response('status.html', RequestContext(request, 
-			 {'attendances': attendance, 'players': players, 
+			 {'attendances': attendance, 'players': player_map.values(), 
 			'game': game, 'attendance_form': attend_form,
 			'summary': summary.items()}))
 
 def add_player(request):
 	" Register a new player. "
 
+	if request.method == 'POST':
+		form = RegisterForm(request.POST)
+
+		if form.is_valid():
+			form.save()
+			return HttpResponseRedirect(reverse('hockey_register.register.views.index'))
+	else:
+		form = RegisterForm()
+
+	return render_to_response('registration/register.html', {'form': form})
 

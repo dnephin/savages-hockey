@@ -1,18 +1,26 @@
 {% extends 'base.html' %}
 
 {% block content %}
-	<h3>Set your status</h3>
+
+	<h2>{{ game }}</h2>
+
+
 	<form action="{% url hockey_register.register.views.update_status game.id %}" method="POST">
-	{{ attendance_form.as_table }}
-	<input type="submit" />
+		<fieldset>
+		<legend>Set your status</legend>
+		{{ attendance_form.as_p }}
+		<input type="submit" />
+		</fieldset>
 	</form>
+
+	<hr />
 
 	<h3> Players registered for the game:</h3>
 	<table>
 		<thead>
 		<tr>
 			<th>Player</th>
-			<th>Status</th>
+			<th>Will they be there?</th>
 		</tr>
 		</thead>
 		<tbody>
@@ -26,7 +34,10 @@
 	</table>
 
 	<h4>Summary</h4>
-	<table>
+	<table style="width: 50%">
+	<thead>
+		<th>Will they be there?</th><th>Count</th>
+	</thead>
 	<tbody>
 	{% for state, count in summary %}
 		<tr>
@@ -37,6 +48,7 @@
 	</tbody>
 	</table>
 
+	<hr />
 	<h3>Players that have not set a status yet for this game:</h3>
 	{% for player in players %}
 		{{ player.first_name }} {{ player.last_name }} ({{ player.username }})
